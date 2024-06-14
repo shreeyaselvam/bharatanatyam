@@ -11,3 +11,150 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+body {
+  padding: 20px;
+  padding-top: 100px;
+}
+
+.logo {
+  width: 80px;
+}
+
+.navbar {
+  height: 75px;
+}
+
+.navbar-custom {
+  background-color: #fa9eac;
+}
+
+.nav-link {
+  display: inline-block;
+  font-size: 20px;
+  color: azure;
+  text-decoration: none;
+  transition: transform 0.3s ease, font-size 0.3s ease;
+  height: 30px;
+  line-height: 30px;
+}
+.nav-link:hover {
+  font-size: 30px;
+  color: azure;
+}
+
+.absolute-title {
+  position: absolute;
+  top: 150px;
+  right: 70px;
+}
+
+.absolute-alert1 {
+  position: absolute;
+  top: 345px;
+  right: 372px;
+  -webkit-text-stroke: 0.5px black;
+  font-size: 30px;
+}
+.absolute-separator {
+  position: absolute;
+  top: 385px;
+  right: 310px;
+  width: 310px;
+  border-top: 5px solid black;
+  z-index: 10;
+}
+.absolute-alert2 {
+  position: absolute;
+  top: 400px;
+  right: 310px;
+}
+.btn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-color: black;
+  color: black;
+}
+.absolute-btn {
+  position: absolute;
+  top: 460px;
+  height: 20px;
+  right: 510px;
+}
+.absolute-btn2 {
+  position: absolute;
+  height: 20px;
+  top: 460px;
+  right: 390px;
+}
+.absolute-btn3 {
+  position: absolute;
+  height: 20px;
+  top: 460px;
+  right: 260px;
+}
+.alert {
+  z-index: 2;
+}
+.card-alert {
+  position: absolute;
+  z-index: 1;
+  top: 350px;
+  right: 240px;
+  width: 425px;
+  height: 170px;
+  /* background-image: url("./card-bg.jpg"); */
+}
+
+.modal-open .container-fluid, .modal-open  .container .body {
+  -webkit-filter: blur(10px) grayscale(90%);
+}
+.modal-content{
+  height: 700px;
+}
+.dropdown-menu{
+  background-color: #fa9eac;
+  border-radius: 0;
+}
+.dropdown-item{
+  color: black;
+  font-weight: 60px;
+}
+.dropdown-divider{
+  border-top: 1px solid black;
+}
+.button-container {
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+}
+.button-container-btn {
+  margin: 20px;
+  text-align: center;
+}
+.rsvp-welcome {
+  text-align: center;
+}
+
+.gmap_canvas {
+  border-radius: 15px; /* Adjust this value for more or less rounding */
+  overflow: hidden; /* Ensures the iframe content follows the rounded corners */
+  width: 400px; /* Ensure this matches the iframe width */
+  height: 500px; /* Ensure this matches the iframe height */
+  margin-left: 20px;
+}
+
+#gmap_canvas {
+  border-radius: 15px; /* Apply the same rounding to the iframe itself */
+  width: 100%; /* Make sure the iframe fits its container */
+  height: 100%; /* Make sure the iframe fits its container */
+  border: 0; /* Remove any default border */
+}
+.rsvp-cards-container {
+  display: flex;
+}
+
+.navbar-nav .nav-item .nav-link {
+  display: flex;
+  align-items: center;
+}
