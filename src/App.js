@@ -10,8 +10,12 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Image } from 'react-bootstrap';
+import RSVP from './Components/RSVP';
+import { useState } from 'react';
+import { FcHome } from "react-icons/fc";
 
 function App() {
+  const [page, setPage] = useState('home');
   return (
     <div className="App" data-bs-theme="dark">
       <>
@@ -36,28 +40,30 @@ function App() {
                 </Offcanvas.Title>
               </Offcanvas.Header>
               <Offcanvas.Body>
-                <Nav className="justify-content-end flex-grow-1 ms-auto">
+                <Nav className="justify-content-end flex-grow-2 ms-auto">
+                  <Nav.Link href="" onClick={() => setPage('home')}><FcHome /></Nav.Link>
                   <NavDropdown className='nav-link'
                     title="Arangetram"
                     id={`offcanvasNavbarDropdown-expand-${'sm'}`}
                   >
-                    <NavDropdown.Item href="#action3">Invitation</NavDropdown.Item>
+                    <NavDropdown.Item href="#action3" onClick={() => setPage('rsvp')}>Invitation</NavDropdown.Item>
                     <NavDropdown.Item href="#action4">Brochure</NavDropdown.Item>
                     <NavDropdown.Item href="#action4">Livestream</NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item href="#action5">Guru & Sishya</NavDropdown.Item>
                     <NavDropdown.Item href="#action5">Orchestration</NavDropdown.Item>
                   </NavDropdown>
-                  <Nav.Link href="#action1">Performances</Nav.Link>
-                  <Nav.Link href="#action2">Mission</Nav.Link>
+                  <Nav.Link href="#action1" onClick={() => setPage('perform')}>Performances</Nav.Link>
+                  <Nav.Link href="#action2" onClick={() => setPage('mission')}>Mission</Nav.Link>
                 </Nav>
               </Offcanvas.Body>
             </Navbar.Offcanvas>
           </Container>
         </Navbar>
       </>
-      <Slideshow />
-      {/* <RSVP /> */}
+      {page=='home' ? <Slideshow/> : <></>}
+      {page=='rsvp' ? 
+        <div style={{paddingTop:'100px'}}><RSVP /></div> : <></>}
     </div>
   );
 }

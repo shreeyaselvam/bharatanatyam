@@ -27,11 +27,14 @@ body {
 .navbar-custom {
   background-color: #fa9eac;
   padding-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adjust the values as needed */
+  z-index: 1000; /* Ensure the navbar is above other content */
 }
 
 .nav-link {
   display: inline-block;
-  font-size: 20px;
+  font-size: 30px;
+  /* font-size: 3rem; */
   color: azure;
   text-decoration: none;
   transition: transform 0.3s ease, font-size 0.3s ease;
@@ -106,7 +109,7 @@ body {
   height: 170px;
   /* background-image: url("./card-bg.jpg"); */
 }
-.card-title {
+.card-name {
   background-image: url("./assets/card-bg.jpg");
   border: 2px solid #000; /* Adjust the border color and width as needed */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adjust the shadow properties as needed */
@@ -152,13 +155,15 @@ body {
   width: 400px; /* Ensure this matches the iframe width */
   height: 500px; /* Ensure this matches the iframe height */
   margin-left: 20px;
+  border-color: black;
 }
 
 #gmap_canvas {
   border-radius: 15px; /* Apply the same rounding to the iframe itself */
   width: 100%; /* Make sure the iframe fits its container */
   height: 100%; /* Make sure the iframe fits its container */
-  border: 0; /* Remove any default border */
+  border: 2px; /* Remove any default border */
+  border-color: black;
 }
 .rsvp-cards-container {
   display: flex;
