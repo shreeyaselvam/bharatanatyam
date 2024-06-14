@@ -13,8 +13,14 @@ import { Image } from 'react-bootstrap';
 import RSVP from './Components/RSVP';
 import { useState } from 'react';
 import { FcHome } from "react-icons/fc";
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getFirestore } from "firebase/firestore";
+import { firebaseConfig } from './assets/firebase-auth';
+import { DiBingSmall } from 'react-icons/di';
 
 function App() {
+  // Initialize Firebase
   const [page, setPage] = useState('home');
   return (
     <div className="App" data-bs-theme="dark">
@@ -36,7 +42,7 @@ function App() {
             >
               <Offcanvas.Header closeButton>
                 <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${'sm'}`}>
-                  Offcanvas
+                  Offcanvas Navigation
                 </Offcanvas.Title>
               </Offcanvas.Header>
               <Offcanvas.Body>
@@ -63,9 +69,11 @@ function App() {
       </>
       {page=='home' ? <Slideshow/> : <></>}
       {page=='rsvp' ? 
-        <div style={{paddingTop:'100px'}}><RSVP /></div> : <></>}
+        <div style={{paddingTop:'100px'}}><RSVP dbRef={db}/></div> : <></>}
     </div>
   );
 }
-
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 export default App;
+export const db = getFirestore(app);
