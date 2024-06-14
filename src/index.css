@@ -26,6 +26,7 @@ body {
 
 .navbar-custom {
   background-color: #fa9eac;
+  padding-bottom: 20px;
 }
 
 .nav-link {
@@ -104,6 +105,15 @@ body {
   width: 425px;
   height: 170px;
   /* background-image: url("./card-bg.jpg"); */
+}
+.card-title {
+  background-image: url("./assets/card-bg.jpg");
+  border: 2px solid #000; /* Adjust the border color and width as needed */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adjust the shadow properties as needed */
+  border-radius: 8px; /* Optional: adds rounded corners */
+  padding: 16px; /* Optional: adds padding inside the div */
+  max-width: 40%; /* Adjust the width as needed */
+  margin: 0 auto;
 }
 
 .modal-open .container-fluid, .modal-open  .container .body {
