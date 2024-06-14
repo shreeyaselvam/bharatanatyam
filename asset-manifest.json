@@ -1,20 +1,21 @@
 {
   "files": {
-    "main.css": "/bharatanatyam/static/css/main.60267286.css",
-    "main.js": "/bharatanatyam/static/js/main.0917a643.js",
+    "main.css": "/bharatanatyam/static/css/main.c418ad08.css",
+    "main.js": "/bharatanatyam/static/js/main.cdaf5d19.js",
     "static/js/453.587d093e.chunk.js": "/bharatanatyam/static/js/453.587d093e.chunk.js",
     "static/media/logofile.png": "/bharatanatyam/static/media/logofile.7f2c9a3f025a32c88009.png",
     "static/media/AbhayaKaram.jpg": "/bharatanatyam/static/media/AbhayaKaram.ea2234d8a372ae0322ac.jpg",
     "static/media/CherryBlossomPose.jpg": "/bharatanatyam/static/media/CherryBlossomPose.3764999da0b5b6f08015.jpg",
     "static/media/CherryBlossomImage.jpg": "/bharatanatyam/static/media/CherryBlossomImage.4a1c087701cc749b0da4.jpg",
+    "static/media/card-bg.jpg": "/bharatanatyam/static/media/card-bg.5bc2ee6d2e43821f2f43.jpg",
     "static/media/StageImage.jpg": "/bharatanatyam/static/media/StageImage.5bb2b53040009fbca2e1.jpg",
     "index.html": "/bharatanatyam/index.html",
-    "main.60267286.css.map": "/bharatanatyam/static/css/main.60267286.css.map",
-    "main.0917a643.js.map": "/bharatanatyam/static/js/main.0917a643.js.map",
+    "main.c418ad08.css.map": "/bharatanatyam/static/css/main.c418ad08.css.map",
+    "main.cdaf5d19.js.map": "/bharatanatyam/static/js/main.cdaf5d19.js.map",
     "453.587d093e.chunk.js.map": "/bharatanatyam/static/js/453.587d093e.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.60267286.css",
-    "static/js/main.0917a643.js"
+    "static/css/main.c418ad08.css",
+    "static/js/main.cdaf5d19.js"
   ]
 }
