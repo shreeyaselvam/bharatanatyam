@@ -80,7 +80,7 @@ function LocationDisplay() {
   console.log("Current location: ", location.pathname); // This will log the current path
   if (location.pathname == "/bharatanatyam") {
     return(<AppBody pageRoute={"home"} />);
-  } else if (location.pathname == "/arangetram/rsvp") {
+  } else if (location.pathname == "/bharatanatyam/rsvp") {
     return(<AppBody pageRoute={"rsvp"} />);
   } else if (location.pathname == "/bharatanatyam/performances") {
     return(<AppBody pageRoute={"perform"} />);
