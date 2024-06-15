@@ -2,80 +2,94 @@ import '../App.css';
 import Carousel from 'react-bootstrap/Carousel';
 import rsvpPic from '../assets/Arangetram_Invite_RSVP.png';
 import Image from 'react-bootstrap/Image';
-import { Card, Button, Stack, Container, Col, Row, Modal, Fade, Table } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
+import { Card, Button, Stack, Container, Col, Row, Modal, Fade, Table, Toast, Badge } from 'react-bootstrap';
+import { useState, useEffect, useRef } from 'react';
 import Collapse from 'react-bootstrap/Collapse';
 import RSVP_Form from './RSVP_Form';
 import firebase_auth from '../assets/firebase-auth';
 import { collection, addDoc, getDocs  } from "firebase/firestore";
 import { CookiesProvider, useCookies } from 'react-cookie';
 import { FcEditImage, FcRemoveImage } from "react-icons/fc";
+import Cookies from 'js-cookie';
+import {getAttendeesByNameAndMobile, postAttendee, setAttendee, db } from './db_repository';
 
-
-const attendanceOptions = [
+const ATTENDANCE_OPTIONS = [
     "Not Attending",
     "In Person",
     "Livestream"
-]
+];
 
-function RSVP_Modal({dbRef, attendStatus, attendeeInfo, setAttendeeInfo, cookies, addCookie, deleteCookie, setSubmit, ...props}) {
-    // console.log("dbRefq: ", dbRef);
-    // let attendeeTempl = {
-    //     name: '',
-    //     email: '',
-    //     attending: attendStatus,
-    //     mobile: 0,
-    //     adults: 0,
-    //     kids: 0,
-    //     comments: '',
-    //     remember: false
-    // }
-    let attendeeTempl = attendStatus;
-    // console.log("attendeeInfo: ", attendeeInfo)
+const ATTENDEE_TEMPLATE = {
+    name: '',
+    email: '',
+    attending: 0,
+    mobile: null,
+    adults: null,
+    kids: null,
+    comments: '',
+    remember: false
+};
 
-    // const fetchPost = async () => {
-       
-    //     await getDocs(collection(dbRef, "attendees"))
-    //         .then((querySnapshot)=>{               
-    //             const newData = querySnapshot.docs
-    //                 .map((doc) => ({...doc.data(), id:doc.id }));            
-    //             console.log(newData);
-    //         })
-    //         .catch((error) => {
-    //             console.log("Error getting documents: ", error);
-    //         });
-    // }
-    // useEffect(()=>{
-    //     fetchPost();
-    // }, [])
+function RSVP_Modal({dbRef, attendeeInfo, setAttendeeInfo, setSubmit, ...props}) {
+    const [showConflictToast, setConflictToast] = useState(false);
+    const toggleConflictToast = () => setConflictToast(!showConflictToast);
 
-    const addRecord = async () => {
+    const submit = async () => {
         try {
             if(attendeeInfo.name === null || attendeeInfo.mobile === null){
                 alert("Please fill in all the required fields!");
                 return;
             }
-            // console.log("type of attendeeInfo: ", attendeeInfo.name);
-            const docRef = await addDoc(collection(dbRef, "attendees"), {
-                adult: attendeeInfo.adults,
-                attending: attendeeInfo.attending,
-                comments: attendeeInfo.comments,
-                email: attendeeInfo.email,
-                kids: attendeeInfo.kids,
-                mobile: attendeeInfo.mobile,
-                name: attendeeInfo.name
+            postAttendee(attendeeInfo).then(response => {
+                if(response == 200){
+                    console.log("Attendee added successfully");
+                    setSubmit(true);
+                    if(attendeeInfo.remember){
+                        Cookies.set('name', attendeeInfo.name, { expires: 7, path: '', secure: true });
+                        Cookies.set('mobile', attendeeInfo.mobile, { expires: 7, path: '', secure: true });
+                    } else {
+                        Cookies.remove('name', { path: '', secure: true });
+                        Cookies.remove('mobile', { path: '', secure: true });
+                    }
+                    props.onHide();
+                }
+                else if(response == 409) {
+                    toggleConflictToast();
+
+                }
+                else if(response == 400) {
+                    console.error("Error adding attendee");
+                }
             });
-            setSubmit(true);
-            console.log("Document written with ID: ", docRef.id);
-            if(attendeeInfo.remember) addCookie(attendeeInfo.name, attendeeInfo.email, attendeeInfo.attending, attendeeInfo.mobile, attendeeInfo.adults, attendeeInfo.kids, attendeeInfo.comments, attendeeInfo.remember);
-            else deleteCookie(attendeeInfo.name, attendeeInfo.email, attendeeInfo.attending, attendeeInfo.mobile, attendeeInfo.adults, attendeeInfo.kids, attendeeInfo.comments, attendeeInfo.remember);
-            // setAttendeeInfo(attendeeTempl);
-            props.onHide();
         } catch (e) {
             console.error("Error adding document: ", e);
         }
     }
+    const updateUserInfo = () => {
+        setAttendee(attendeeInfo).then(response => {
+            if(response == 200){
+                console.log("Attendee updated successfully");
+                toggleConflictToast();
+                setSubmit(true);
+                if(attendeeInfo.remember){
+                    Cookies.set('name', attendeeInfo.name, { expires: 7, path: '', secure: true });
+                    Cookies.set('mobile', attendeeInfo.mobile, { expires: 7, path: '', secure: true });
+                } else {
+                    Cookies.remove('name', { path: '', secure: true });
+                    Cookies.remove('mobile', { path: '', secure: true });
+                }
+                props.onHide();
+            }
+            else if(response == 409) {
+                console.error("Conflict updating attendee");
+            }
+            else if(response == 400) {
+                console.error("Error updating attendee");
+            }
+        });
+    }
     return (
+        
       <Modal
         {...props}
         size="lg"
@@ -92,93 +106,132 @@ function RSVP_Modal({dbRef, attendStatus, attendeeInfo, setAttendeeInfo, cookies
           <RSVP_Form info={attendeeInfo} updateInfo={setAttendeeInfo}/>
         </Modal.Body>
         <Modal.Footer>
-            <Button variant="outline-success" onClick={addRecord}>Submit</Button>
+            <Button variant="outline-success" onClick={submit}>{showConflictToast ? "Update Info" : "Submit"}</Button>
             <Button variant="outline-danger" onClick={props.onHide}>Close</Button>
         </Modal.Footer>
       </Modal>
     );
-  }
-
+}
 
 function RSVP({ dbRef }) {
+    const firstRender = useRef(true);
     const [open, setOpen] = useState(false);
     const [submitted, setSubmit] = useState(false);
+    const [attendeeInfo, setAttendeeInfo] = useState(ATTENDEE_TEMPLATE);
     const [attending, setAttending] = useState(0);
-    const [cookies, setCookie, removeCookie] = useCookies(['name', 'email', 'attending', 'mobile', 'adults', 'kids', 'comments', 'remember'])
-    let attendeeTempl = {
-        name: cookies.name || null,
-        email: cookies.email || null,
-        attending: attending,
-        mobile: cookies.mobile || null,
-        adults: cookies.adults || null,
-        kids: cookies.kids || null,
-        comments: cookies.comments || null,
-        remember: cookies.remember || false
-    }
-    const [attendeeInfo, setAttendeeInfo] = useState(attendeeTempl);
+
     useEffect(() => {
-        if(cookies){
-            attendeeTempl.name = cookies.name;
-            attendeeTempl.email = cookies.email;
-            attendeeTempl.attending = cookies.attending;
-            attendeeTempl.mobile = cookies.mobile;
-            attendeeTempl.adults = cookies.adults;
-            attendeeTempl.kids = cookies.kids;
-            attendeeTempl.comments = cookies.comments;
-            attendeeTempl.remember = cookies.remember;
-            setSubmit(true);
+        if (firstRender.current) {
+            const name = Cookies.get('name');
+            const mobile = Cookies.get('mobile');
+            console.log("name: ", name, " mobile: ", mobile);
+            if(name != undefined && mobile != undefined){
+                getAttendeesByNameAndMobile(name, mobile)
+                    .then(snapshot => {
+                        console.log("snapshot: ", snapshot);
+                        const mergedAttendee = { ...ATTENDEE_TEMPLATE, ...snapshot };
+                        setAttendeeInfo(mergedAttendee);
+                    })
+                    .catch(error => {
+                        console.error("Error fetching attendees: ", error);
+                    });
+                setSubmit(true);
+            } else {
+                console.log("No user cookies found");
+                setSubmit(false);
+            }
+            firstRender.current = false;
+            return;
         }
-    }, [cookies]);
+        // getAttendeesByNameAndMobile("Shreeya Selvam", 8043031984)
+        //             .then(snapshot => {
+        //                 console.log("snapshot: ", snapshot);
+        //                 const mergedAttendee = { ...ATTENDEE_TEMPLATE, ...snapshot };
+        //                 console.log("Merged Attendee: ", mergedAttendee);
+        //                 setAttendeeInfo(mergedAttendee);
+        //                 console.log("Attendee Info: ", attendeeInfo);
+        //             })
+        //             .catch(error => {
+        //                 console.error("Error fetching attendees: ", error);
+        //             });
+    });
+
+    //const [cookies, setCookie, removeCookie] = useCookies(['name', 'email', 'attending', 'mobile', 'adults', 'kids', 'comments', 'remember'])
+    // useEffect(() => {
+    //     if(cookies){
+    //         attendeeTempl.name = cookies.name;
+    //         attendeeTempl.email = cookies.email;
+    //         attendeeTempl.attending = cookies.attending;
+    //         attendeeTempl.mobile = cookies.mobile;
+    //         attendeeTempl.adults = cookies.adults;
+    //         attendeeTempl.kids = cookies.kids;
+    //         attendeeTempl.comments = cookies.comments;
+    //         attendeeTempl.remember = cookies.remember;
+    //         setSubmit(true);
+    //     }
+    // }, [cookies]);
     console.log("attendeeInfo: ", attendeeInfo);
     useEffect(() => {
         setAttendeeInfo((prev) => ({
           ...prev,
           attending: attending,
         }));
-        attendeeTempl.attending = attending;
+        // ATTENDEE_TEMPLATE.attending = attending;
     }, [attending]);
 
-    const setCookieFields = (name, email, attending, mobile, adults, kids, comments, remember) => {
-        setCookie('name', name, { path: '/' });
-        setCookie('email', email, { path: '/' });
-        setCookie('attending', attending, { path: '/' });
-        setCookie('mobile', mobile, { path: '/' });
-        setCookie('adults', adults, { path: '/' });
-        setCookie('kids', kids, { path: '/' });
-        setCookie('comments', comments, { path: '/' });
-        setCookie('remember', remember, { path: '/' });
-    }
-    const deleteCookie = (name, email, attending, mobile, adults, kids, comments, remember) => {
-        removeCookie(name, '', { path: '/' });
-        removeCookie(email, '', { path: '/' });
-        removeCookie(attending, '', { path: '/' });
-        removeCookie(mobile, '', { path: '/' });
-        removeCookie(adults, '', { path: '/' });
-        removeCookie(kids, '', { path: '/' });
-        removeCookie(comments, '', { path: '/' });
-        removeCookie(remember, '', { path: '/' });
-    }
+    // const setCookieFields = (name, email, attending, mobile, adults, kids, comments, remember) => {
+    //     setCookie('name', name, { path: '/' });
+    //     setCookie('email', email, { path: '/' });
+    //     setCookie('attending', attending, { path: '/' });
+    //     setCookie('mobile', mobile, { path: '/' });
+    //     setCookie('adults', adults, { path: '/' });
+    //     setCookie('kids', kids, { path: '/' });
+    //     setCookie('comments', comments, { path: '/' });
+    //     setCookie('remember', remember, { path: '/' });
+    // }
+    // const deleteCookie = (name, email, attending, mobile, adults, kids, comments, remember) => {
+    //     removeCookie(name, '', { path: '/' });
+    //     removeCookie(email, '', { path: '/' });
+    //     removeCookie(attending, '', { path: '/' });
+    //     removeCookie(mobile, '', { path: '/' });
+    //     removeCookie(adults, '', { path: '/' });
+    //     removeCookie(kids, '', { path: '/' });
+    //     removeCookie(comments, '', { path: '/' });
+    //     removeCookie(remember, '', { path: '/' });
+    // }
     const reset = () => {
-        deleteCookie(attendeeInfo.name, attendeeInfo.email, attendeeInfo.attending, attendeeInfo.mobile, attendeeInfo.adults, attendeeInfo.kids, attendeeInfo.comments, attendeeInfo.remember);
-        attendeeTempl.name = attendeeTempl.email = attendeeTempl.mobile = attendeeTempl.adults = attendeeTempl.kids = attendeeTempl.comments = null;
-        attendeeTempl.remember = false;
-        setAttendeeInfo(attendeeTempl);
+        //deleteCookie(attendeeInfo.name, attendeeInfo.email, attendeeInfo.attending, attendeeInfo.mobile, attendeeInfo.adults, attendeeInfo.kids, attendeeInfo.comments, attendeeInfo.remember);
+        // ATTENDEE_TEMPLATE.name = ATTENDEE_TEMPLATE.email = ATTENDEE_TEMPLATE.mobile = ATTENDEE_TEMPLATE.adults = ATTENDEE_TEMPLATE.kids = ATTENDEE_TEMPLATE.comments = null;
+        // ATTENDEE_TEMPLATE.remember = false;
+        setAttendeeInfo(ATTENDEE_TEMPLATE);
         setSubmit(false);
     }
     return (
     <>
-        <Container>
-            <Row>
-                <Col sm={8}>
-                    <Card style={{ maxWidth: '55rem' }}>
-                        <img src={rsvpPic} alt="RSVP" style={{height: '60vh', width: 'auto', 'maxWidth': '100%'}}/>
+        <Container fluid className="d-flex flex-column vh-100">
+            <Row className="flex-grow-1">
+                <Col sm={12} md={7} className="mb-3 mb-md-0" >
+                    <Card>
+                        <img src={rsvpPic} alt="RSVP" className='img-fluid rsvp-image'/>
                         {/* <Card.Img variant="top" src={{rsvpPic}} /> */}
-                        <Card.Body>
+                        <RSVP_Modal
+                            dbRef={dbRef}
+                            attendeeInfo={attendeeInfo}
+                            setAttendeeInfo={setAttendeeInfo}
+                            setSubmit={setSubmit}
+                            show={open}
+                            onHide={() => setOpen(false)}
+                        />
+                    </Card>
+                </Col>
+                <Col sm={12} md={5}>
+                    <Card className='custom-card'>
+                    <Card.Body>
                             {!submitted ? (
                                 <>
                                     <Card.Title>You Are Invited!</Card.Title>
                                     <Card.Text>
-                                        Let us know if you would like to attend Shreeya's Bharatanatyam Arangetram 🎉
+                                        Would you like to attend Shreeya's Bharatanatyam Arangetram 🎉
                                     </Card.Text>
                                     <Stack direction="horizontal" gap={3} className="justify-content-center">
                                         <Button variant="success" onClick={() => {setAttending(1); setOpen(true);}}>Yes ✔️</Button>{' '}
@@ -186,7 +239,7 @@ function RSVP({ dbRef }) {
                                         <Button variant="warning" onClick={() => {setAttending(0); setOpen(true);}}>No ❌</Button>{' '}
                                     </Stack>
                                 </>) : <></>}
-                            <Fade in={submitted}>
+                            {submitted ? <Fade in={submitted}>
                                 <div id="example-fade-text" className="justify-content-center">
                                     <h4>Thank you for your response! We look forward to seeing you at the event.</h4>
                                     <br></br>
@@ -209,7 +262,7 @@ function RSVP({ dbRef }) {
                                                 <td>{attendeeInfo.email}</td>
                                                 <td>{attendeeInfo.adults}</td>
                                                 <td>{attendeeInfo.kids}</td>
-                                                <td>{attendanceOptions[attendeeInfo.attending]}</td>
+                                                <td>{ATTENDANCE_OPTIONS[attendeeInfo.attending]}</td>
                                             </tr>
                                         </tbody>
                                     </Table>
@@ -231,28 +284,50 @@ function RSVP({ dbRef }) {
                                         </Row>
                                     </Container> */}
                                 </div>
-                            </Fade>
+                            </Fade> : <></>}
+                            <br></br>
                         </Card.Body>
-                        <RSVP_Modal
-                            dbRef={dbRef}
-                            attendStatus={attendeeTempl}
-                            attendeeInfo={attendeeInfo}
-                            setAttendeeInfo={setAttendeeInfo}
-                            cookies={cookies}
-                            addCookie={setCookieFields}
-                            deleteCookie={deleteCookie}
-                            setSubmit={setSubmit}
-                            show={open}
-                            onHide={() => setOpen(false)}
-                        />
+                        <Card.Body>
+                            <Stack gap={3}>
+                                <>
+                                    <Card.Title>Event Details</Card.Title>
+                                    <div class="event-container">
+                                        <div class="event">
+                                            <div class="event-left">
+                                                <div class="event-date">
+                                                    <div class="date">21</div>
+                                                    <div class="month">Jul</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="event-right">
+                                            <h3 class="event-title">Shreeya's Arangtram</h3>
+
+                                            <div class="event-description">
+                                                <Card.Text>
+                                                    <h5>Rasika Ranjani Sabha</h5>
+                                                    <h7>3838 Mumford Rd, Halifax, NS B3L 4N9</h7>
+                                                    <br></br>
+                                                    <Badge pill bg="light" text="dark">
+                                                    SUNDAY, July 21
+                                                    </Badge> &nbsp;
+                                                    <Badge pill bg="light" text="dark">
+                                                    Seating @ 5:30 PM
+                                                    </Badge>
+                                                </Card.Text>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                                <div className='mapouter d-flex justify-content-center'>
+                                    <div className='gmap_canvas'>
+                                        <iframe width='100px' height='100px' id='gmap_canvas' src='https://maps.google.com/maps?q=rasika%20ranjani%20sabha&t=&z=13&ie=UTF8&iwloc=&output=embed' frameBorder='0' scrolling='no' marginHeight='0' marginWidth='0'></iframe>
+                                    </div>
+                                </div>
+                            </Stack>
+                        </Card.Body>
                     </Card>
-                </Col>
-                <Col sm={4}>
-                    <div className='mapouter'>
-                        <div className='gmap_canvas'>
-                            <iframe width='400' height='500' id='gmap_canvas' src='https://maps.google.com/maps?q=rasika%20ranjani%20sabha&t=&z=13&ie=UTF8&iwloc=&output=embed' frameBorder='0' scrolling='no' marginHeight='0' marginWidth='0'></iframe>
-                        </div>
-                    </div>
                 </Col>
             </Row>
         </Container>

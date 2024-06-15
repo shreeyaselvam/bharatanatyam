@@ -29,6 +29,7 @@ body {
   padding-bottom: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adjust the values as needed */
   z-index: 1000; /* Ensure the navbar is above other content */
+  padding-bottom: 10px;
 }
 
 .nav-link {
@@ -152,8 +153,8 @@ body {
 .gmap_canvas {
   border-radius: 15px; /* Adjust this value for more or less rounding */
   overflow: hidden; /* Ensures the iframe content follows the rounded corners */
-  width: 400px; /* Ensure this matches the iframe width */
-  height: 500px; /* Ensure this matches the iframe height */
+  width: 250px; /* Ensure this matches the iframe width */
+  height: 250px; /* Ensure this matches the iframe height */
   margin-left: 20px;
   border-color: black;
 }
@@ -176,4 +177,129 @@ body {
 .rsvp_modal {
   backdrop-filter: blur(8px);
   z-index: 1000;
+}
+.rsvp_modal .modal-body {
+  max-height: 60vh; /* Adjust the height as needed */
+  overflow-y: auto;
+}
+
+.rsvp-image {
+  height: 60vh;
+  width: auto;
+  max-width: 100%;
+}
+
+@media (max-width: 576px) {
+  .rsvp-image {
+    height: auto;
+    width: 100%;
+  }
+
+  .mapouter iframe {
+    width: 100%;
+  }
+}
+
+.event-container {
+  font-family: "Roboto", sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.event-container h3.year {
+  font-size: 40px;
+  text-align: center;
+  border-bottom: 1px solid #b1b1b1;
+}
+
+.event-container .event {
+  box-shadow: 0 4px 16px -8px rgba(0, 0, 0, 0.4);
+  display: flex;
+  border-radius: 8px;
+  margin: 0px 0;
+}
+
+.event {
+  background: #211611;
+  max-width: 800px;
+}
+
+.event .event-left {
+  background: #4A3327;
+  min-width: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #eee;
+  padding: 20px 48px;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 8px 0 0 8px;
+}
+
+.event .event-left .date {
+  font-size: 56px;
+}
+
+.event .event-left .month {
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.event .event-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 24px;
+}
+
+.event .event-right h3.event-title {
+  font-size: 24px;
+  margin: 0px 0 10px 0;
+  color: #218bbb;
+  text-transform: uppercase;
+}
+
+.event .event-right .event-timing {
+  background: #fff8ba;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 200px;
+  padding: 8px;
+  border-radius: 16px;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.event .event-right .event-timing img {
+  height: 20px;
+  padding-right: 2px;
+}
+
+@media (max-width: 700px) {
+  .event {
+    flex-direction: column;
+  }
+
+  .event .event-left {
+    padding: 0;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .event .event-left .event-date .date,
+  .event .event-left .event-date .month {
+    display: inline-block;
+    font-size: 24px;
+  }
+
+  .event .event-left .event-date {
+    padding: 5px 0;
+  }
+}
+
+.custom-card {
+  background-color: #f7f7f7;
+  border-radius: 0 0 8px 8px;
+  padding: 20px;
 }

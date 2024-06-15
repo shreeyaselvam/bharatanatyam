@@ -23,17 +23,16 @@ function App() {
   // Initialize Firebase
   const [page, setPage] = useState('home');
   return (
-    <div className="App" data-bs-theme="dark">
-      <>
-        <Navbar key={'sm'} expand={'sm'} className="navbar mb-3 navbar-custom" fixed="top">
+    <Container fluid className="App" data-bs-theme="dark">
+        <Navbar key={'sm'} expand={'sm'} className="navbar mb-3 navbar-custom" fixed="top" style={{height: "10vh"}}>
           <Container fluid>
             <Navbar.Brand href="#"><img
-          src={logo}
-          width="70"
-          height="70"
-          className="d-inline-block align-top"
-          alt="Brand logo"
-        /></Navbar.Brand>
+              src={logo}
+              width="70"
+              height="70"
+              className="d-inline-block align-top"
+              alt="Brand logo"
+            /></Navbar.Brand>
             <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${'sm'}`} />
             <Navbar.Offcanvas
               id={`offcanvasNavbar-expand-${'sm'}`}
@@ -66,14 +65,10 @@ function App() {
             </Navbar.Offcanvas>
           </Container>
         </Navbar>
-      </>
-      {page=='home' ? <Slideshow/> : <></>}
-      {page=='rsvp' ? 
-        <div style={{paddingTop:'100px'}}><RSVP dbRef={db}/></div> : <></>}
-    </div>
+        {page=='home' ? <Slideshow/> : <></>}
+        {page=='rsvp' ? 
+          <div style={{paddingTop:'100px'}}><RSVP /></div> : <></>}
+    </Container>
   );
 }
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 export default App;
-export const db = getFirestore(app);
