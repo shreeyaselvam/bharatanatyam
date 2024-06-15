@@ -18,7 +18,7 @@ import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { firebaseConfig } from './assets/firebase-auth';
 import { DiBingSmall } from 'react-icons/di';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, useSearchParams } from 'react-router-dom';
 
 function AppBody({ pageRoute }) {
   // Initialize Firebase
@@ -76,27 +76,36 @@ function AppBody({ pageRoute }) {
   );
 }
 function LocationDisplay() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  console.log("Search params: ", searchParams.toString());
+  const params = searchParams.toString().split("=");
+  console.log("Params: ", params);
   const location = useLocation();
   console.log("Current location: ", location.pathname); // This will log the current path
-  if (location.pathname == "/bharatanatyam") {
-    return(<AppBody pageRoute={"home"} />);
-  } else if (location.pathname == "/bharatanatyam/rsvp") {
-    return(<AppBody pageRoute={"rsvp"} />);
-  } else if (location.pathname == "/bharatanatyam/performances") {
-    return(<AppBody pageRoute={"perform"} />);
-  } else if (location.pathname == "/bharatanatyam/mission") {
-    return(<AppBody pageRoute={"mission"} />);
-  } else if (location.pathname == "/arangetram/guru_sishya") {
-    return(<AppBody pageRoute={"sishya"} />);
-  } else if (location.pathname == "/arangetram/brochure") {
-    return(<AppBody pageRoute={"brochure"} />);
-  } else if (location.pathname == "/arangetram/livestream") {
-    return(<AppBody pageRoute={"livestream"} />);
-  } else if (location.pathname == "/arangetram/orchestration") {
-    return(<AppBody pageRoute={"orchestration"} />);
+  if (params[1] != undefined) {
+    return(<AppBody pageRoute={params[1]} />);
   } else {
     return(<AppBody pageRoute={"home"} />);
   }
+  // if (location.pathname == "/bharatanatyam") {
+  //   return(<AppBody pageRoute={"home"} />);
+  // } else if (location.pathname == "/bharatanatyam/rsvp") {
+  //   return(<AppBody pageRoute={"rsvp"} />);
+  // } else if (location.pathname == "/bharatanatyam/performances") {
+  //   return(<AppBody pageRoute={"perform"} />);
+  // } else if (location.pathname == "/bharatanatyam/mission") {
+  //   return(<AppBody pageRoute={"mission"} />);
+  // } else if (location.pathname == "/arangetram/guru_sishya") {
+  //   return(<AppBody pageRoute={"sishya"} />);
+  // } else if (location.pathname == "/arangetram/brochure") {
+  //   return(<AppBody pageRoute={"brochure"} />);
+  // } else if (location.pathname == "/arangetram/livestream") {
+  //   return(<AppBody pageRoute={"livestream"} />);
+  // } else if (location.pathname == "/arangetram/orchestration") {
+  //   return(<AppBody pageRoute={"orchestration"} />);
+  // } else {
+  //   return(<AppBody pageRoute={"home"} />);
+  // }
 }
 function App() {
   return (<div className="App">
