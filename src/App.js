@@ -50,20 +50,24 @@ function AppBody({ pageRoute }) {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-2 ms-auto">
-                  <Nav.Link href="" onClick={() => setPage('home')}><FcHome /></Nav.Link>
+                  <Nav.Link href="?page=home" onClick={() => setPage('home')}><FcHome /></Nav.Link>
                   <NavDropdown className='nav-link'
                     title="Arangetram"
                     id={`offcanvasNavbarDropdown-expand-${'sm'}`}
                   >
-                    <NavDropdown.Item href="#action3" onClick={() => {setPage('rsvp'); setShowOffcanvas(false);}}>Invitation</NavDropdown.Item>
-                    <NavDropdown.Item href="#action4">Brochure</NavDropdown.Item>
-                    <NavDropdown.Item href="#action4">Livestream</NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item href="#action5">Guru & Sishya</NavDropdown.Item>
-                    <NavDropdown.Item href="#action5">Orchestration</NavDropdown.Item>
+                    <div style={{top:'10px'}}>
+                      <NavDropdown.Item href="?page=rsvp" onClick={() => {setPage('rsvp'); setShowOffcanvas(false);}}>
+                        Invitation
+                      </NavDropdown.Item>
+                      <NavDropdown.Item href="?page=brochure">Brochure</NavDropdown.Item>
+                      <NavDropdown.Item href="?page=stream">Livestream</NavDropdown.Item>
+                      <NavDropdown.Divider />
+                      <NavDropdown.Item href="?page=sishya">Guru & Sishya</NavDropdown.Item>
+                      <NavDropdown.Item href="?page=orchstration">Orchestration</NavDropdown.Item>
+                    </div>
                   </NavDropdown>
-                  <Nav.Link href="#action1" onClick={() => {setPage('perform'); setShowOffcanvas(false);}}>Performances</Nav.Link>
-                  <Nav.Link href="#action2" onClick={() => {setPage('mission'); setShowOffcanvas(false);}}>Mission</Nav.Link>
+                  <Nav.Link href="?page=performances" onClick={() => {setPage('perform'); setShowOffcanvas(false);}}>Performances</Nav.Link>
+                  <Nav.Link href="?page=mission" onClick={() => {setPage('mission'); setShowOffcanvas(false);}}>Mission</Nav.Link>
                 </Nav>
               </Offcanvas.Body>
             </Navbar.Offcanvas>

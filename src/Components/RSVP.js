@@ -238,9 +238,9 @@ function RSVP({ dbRef }) {
                     <Card.Body>
                             {!submitted ? (
                                 <>
-                                    <Card.Title>You Are Invited!</Card.Title>
+                                    <Card.Title>You Are Invited! 🎉</Card.Title>
                                     <Card.Text>
-                                        Would you like to attend Shreeya's Bharatanatyam Arangetram 🎉
+                                        Would you like to attend Shreeya's Bharatanatyam Arangetram?
                                     </Card.Text>
                                     <Stack direction="horizontal" gap={3} className="justify-content-center">
                                         <Button variant="success" onClick={() => {setAttending(1); setOpen(true);}}>Yes &nbsp; 
@@ -253,11 +253,11 @@ function RSVP({ dbRef }) {
                                                     <FcMinus />
                                             </Badge>
                                         </Button>{' '}
-                                        <Button variant="primary" onClick={() => {setAttending(2); setOpen(true);}}>Livestream &nbsp;
+                                        {/* <Button variant="primary" onClick={() => {setAttending(2); setOpen(true);}}>Livestream &nbsp;
                                             <Badge pill bg="light" text="dark">
                                                     <FcCamcorderPro />
                                             </Badge>
-                                        </Button>{' '}
+                                        </Button>{' '} */}
                                     </Stack>
                                 </>) : <></>}
                             {submitted ? <Fade in={submitted}>

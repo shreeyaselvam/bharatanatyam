@@ -29,7 +29,8 @@ function RSVP_Form({ info, updateInfo }) {
                     <Form.Control type="email" placeholder="e.g. absent-minded-shreeya@gmail.com" value={info.email || ''} onChange={e => 
                         updateInfo({...info, email: e.target.value})} />
                 </Form.Group>
-                <Form.Group as={Col} className="mb-3" controlId="formGridAddress1" onChange={e => updateInfo({...info, attending: parseInt(e.target.value)})}>
+                <Form.Group as={Col} controlId="formGridPassword"></Form.Group>
+                {/* <Form.Group as={Col} className="mb-3" controlId="formGridAddress1" onChange={e => updateInfo({...info, attending: parseInt(e.target.value)})}>
                     <Form.Label><b>How are you attending?</b></Form.Label>
                     <Form.Select aria-label="Default select example">
                         {info.attending == 0 ? <><option value="1">In Person</option>
@@ -40,10 +41,9 @@ function RSVP_Form({ info, updateInfo }) {
                         <option value="2" selected>Livestream</option>
                         <option value="0">Sorry, can't attend</option></>)}
                     </Form.Select>
-                </Form.Group>
+                </Form.Group> */}
             </Row>
-
-            {info.attending == 1 ? (<Row className="mb-3">
+            {info.attending == 1 ? (<><Row className="mb-3">
                 <Form.Label><b>Who's Attending?</b></Form.Label>
                 <Form.Group as={Col} controlId="formGridCity">
                     <Form.Label>Number of Adults</Form.Label>
@@ -56,7 +56,7 @@ function RSVP_Form({ info, updateInfo }) {
                     <Form.Control type="number" placeholder="e.g. 3" value={info.kids !== undefined ? info.kids : ''} onChange={e => 
                     updateInfo({...info, kids: parseInt(e.target.value)})}/>
                 </Form.Group>
-            </Row>) : <></>}
+            </Row><br></br></>) : <></>}
             <br></br>
             <Form.Label><b>Any Comments?</b> </Form.Label>
             <Form.Control as="textarea" rows={3} value={info.comments || ''} onChange={e => 

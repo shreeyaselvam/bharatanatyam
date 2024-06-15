@@ -116,7 +116,7 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adjust the shadow properties as needed */
   border-radius: 8px; /* Optional: adds rounded corners */
   padding: 16px; /* Optional: adds padding inside the div */
-  max-width: 40%; /* Adjust the width as needed */
+  max-width: 500px; /* Adjust the width as needed */
   margin: 0 auto;
 }
 
@@ -177,7 +177,7 @@ body {
 .rsvp_modal {
   backdrop-filter: blur(8px);
   z-index: 1000;
-  
+
 }
 .rsvp_modal .modal-body {
   max-height: 60vh; /* Adjust the height as needed */
