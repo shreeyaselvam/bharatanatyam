@@ -2,16 +2,17 @@ import '../App.css';
 import Carousel from 'react-bootstrap/Carousel';
 import rsvpPic from '../assets/Arangetram_Invite_RSVP.png';
 import Image from 'react-bootstrap/Image';
-import { Card, Button, Stack, Container, Col, Row, Modal, Fade, Table, Toast, Badge } from 'react-bootstrap';
+import { Card, Button, Stack, Container, Col, Row, Modal, Fade, Table, Toast, Badge, Alert } from 'react-bootstrap';
 import { useState, useEffect, useRef } from 'react';
 import Collapse from 'react-bootstrap/Collapse';
 import RSVP_Form from './RSVP_Form';
 import firebase_auth from '../assets/firebase-auth';
 import { collection, addDoc, getDocs  } from "firebase/firestore";
 import { CookiesProvider, useCookies } from 'react-cookie';
-import { FcEditImage, FcRemoveImage } from "react-icons/fc";
+import { FcEditImage, FcRemoveImage, FcCamcorderPro, FcCheckmark, FcMinus } from "react-icons/fc";
 import Cookies from 'js-cookie';
 import {getAttendeesByNameAndMobile, postAttendee, setAttendee, db } from './db_repository';
+import { FiMaximize2, FiMaximize } from "react-icons/fi";
 
 const ATTENDANCE_OPTIONS = [
     "Not Attending",
@@ -41,6 +42,7 @@ function RSVP_Modal({dbRef, attendeeInfo, setAttendeeInfo, setSubmit, ...props})
                 return;
             }
             postAttendee(attendeeInfo).then(response => {
+                console.log("Recieved:", response);
                 if(response == 200){
                     console.log("Attendee added successfully");
                     setSubmit(true);
@@ -54,7 +56,8 @@ function RSVP_Modal({dbRef, attendeeInfo, setAttendeeInfo, setSubmit, ...props})
                     props.onHide();
                 }
                 else if(response == 409) {
-                    toggleConflictToast();
+                    setConflictToast(true);
+                    console.log("Conflict adding attendee");
                 }
                 else if(response == 400) {
                     console.error("Error adding attendee");
@@ -81,6 +84,7 @@ function RSVP_Modal({dbRef, attendeeInfo, setAttendeeInfo, setSubmit, ...props})
             }
             else if(response == 409) {
                 console.error("Conflict updating attendee");
+                setConflictToast(true);
             }
             else if(response == 400) {
                 console.error("Error updating attendee");
@@ -105,8 +109,11 @@ function RSVP_Modal({dbRef, attendeeInfo, setAttendeeInfo, setSubmit, ...props})
           <RSVP_Form info={attendeeInfo} updateInfo={setAttendeeInfo}/>
         </Modal.Body>
         <Modal.Footer>
-            
-            <Button variant="outline-success" onClick={submit}>{showConflictToast ? "Update Info" : "Submit"}</Button>
+            {showConflictToast ? <Alert variant="success">
+                Looks like you are already registered with us, we see the following fields are different: 
+                Would you like to update your information? &nbsp; <Button variant="outline-primary" onClick={updateUserInfo}>Yes</Button> &nbsp; <Button variant="outline-danger" onClick={toggleConflictToast}>No</Button>
+            </Alert> : <></>}
+            <Button variant="outline-success" onClick={submit}>{"Submit"}</Button>
             <Button variant="outline-danger" onClick={props.onHide}>Close</Button>
         </Modal.Footer>
       </Modal>
@@ -119,6 +126,7 @@ function RSVP({ dbRef }) {
     const [submitted, setSubmit] = useState(false);
     const [attendeeInfo, setAttendeeInfo] = useState(ATTENDEE_TEMPLATE);
     const [attending, setAttending] = useState(0);
+    const [mapOpen, setMapOpen] = useState(false);
 
     useEffect(() => {
         if (firstRender.current) {
@@ -130,6 +138,7 @@ function RSVP({ dbRef }) {
                     .then(snapshot => {
                         console.log("snapshot: ", snapshot);
                         const mergedAttendee = { ...ATTENDEE_TEMPLATE, ...snapshot };
+                        console.log("Merged Attendee: ", mergedAttendee);
                         setAttendeeInfo(mergedAttendee);
                     })
                     .catch(error => {
@@ -234,9 +243,21 @@ function RSVP({ dbRef }) {
                                         Would you like to attend Shreeya's Bharatanatyam Arangetram 🎉
                                     </Card.Text>
                                     <Stack direction="horizontal" gap={3} className="justify-content-center">
-                                        <Button variant="success" onClick={() => {setAttending(1); setOpen(true);}}>Yes ✔️</Button>{' '}
-                                        <Button variant="primary" onClick={() => {setAttending(2); setOpen(true);}}>Let's Livestream 🎥</Button>{' '}
-                                        <Button variant="warning" onClick={() => {setAttending(0); setOpen(true);}}>No ❌</Button>{' '}
+                                        <Button variant="success" onClick={() => {setAttending(1); setOpen(true);}}>Yes &nbsp; 
+                                            <Badge pill bg="light" text="dark">
+                                                <FcCheckmark />
+                                            </Badge>
+                                        </Button>{' '}
+                                        <Button variant="warning" onClick={() => {setAttending(0); setOpen(true);}}>No &nbsp;
+                                            <Badge pill bg="light" text="dark">
+                                                    <FcMinus />
+                                            </Badge>
+                                        </Button>{' '}
+                                        <Button variant="primary" onClick={() => {setAttending(2); setOpen(true);}}>Livestream &nbsp;
+                                            <Badge pill bg="light" text="dark">
+                                                    <FcCamcorderPro />
+                                            </Badge>
+                                        </Button>{' '}
                                     </Stack>
                                 </>) : <></>}
                             {submitted ? <Fade in={submitted}>
@@ -249,24 +270,22 @@ function RSVP({ dbRef }) {
                                             <tr>
                                                 <th>First Name</th>
                                                 <th>Cell Number</th>
-                                                <th>Email</th>
-                                                <th>Number of Adults</th>
-                                                <th>Number of Kids</th>
-                                                <th>Attendance</th>
+                                                <th>Adults</th>
+                                                <th>Kids</th>
+                                                {/* <th>Attendance</th> */}
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td>{attendeeInfo.name}</td>
                                                 <td>{attendeeInfo.mobile}</td>
-                                                <td>{attendeeInfo.email}</td>
                                                 <td>{attendeeInfo.adults}</td>
                                                 <td>{attendeeInfo.kids}</td>
-                                                <td>{ATTENDANCE_OPTIONS[attendeeInfo.attending]}</td>
+                                                {/* <td>{ATTENDANCE_OPTIONS[attendeeInfo.attending]}</td> */}
                                             </tr>
                                         </tbody>
                                     </Table>
-                                    <Button type="submit" onClick={() => setOpen(true)}>Edit Registration <FcEditImage /></Button> &nbsp;
+                                    <Button type="submit" onClick={() => setOpen(true)}>Edit <FcEditImage /></Button> &nbsp;
                                     <Button variant="warning" type="submit" onClick={reset}>Not You? <FcRemoveImage /></Button>
                                     {/* <Container>
                                         <Row>
@@ -287,7 +306,8 @@ function RSVP({ dbRef }) {
                             </Fade> : <></>}
                             <br></br>
                         </Card.Body>
-                        <Card.Body>
+                        <hr></hr>
+                        <Card.Body className='position-relative'>
                             <Stack gap={3}>
                                 <>
                                     <Card.Title>Event Details</Card.Title>
@@ -296,15 +316,15 @@ function RSVP({ dbRef }) {
                                             <div class="event-left">
                                                 <div class="event-date">
                                                     <div class="date">21</div>
-                                                    <div class="month">Jul</div>
+                                                    <div class="month">July</div>
                                                 </div>
                                             </div>
 
                                             <div class="event-right">
-                                            <h3 class="event-title">Shreeya's Arangtram</h3>
+                                            <h3 class="event-title">Shreeya's Arangetram</h3>
 
                                             <div class="event-description">
-                                                <Card.Text>
+                                                <Card.Text className='event-card'>
                                                     <h5>Rasika Ranjani Sabha</h5>
                                                     <h7>3838 Mumford Rd, Halifax, NS B3L 4N9</h7>
                                                     <br></br>
@@ -313,15 +333,24 @@ function RSVP({ dbRef }) {
                                                     </Badge> &nbsp;
                                                     <Badge pill bg="light" text="dark">
                                                     Seating @ 5:30 PM
+                                                    </Badge> &nbsp;
+                                                    <Badge pill bg="light" text="dark">
+                                                    Dinner @ 8:00 PM
                                                     </Badge>
                                                 </Card.Text>
                                             </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <Alert variant="warning" style={{marginLeft: '51px', marginRight: '51px'}}>
+                                        Tea and snacks will be served at 4:45 PM. <b>Doors will close sharply at 6:00 PM.</b>
+                                    </Alert>
                                 </>
                                 <div className='mapouter d-flex justify-content-center'>
-                                    <div className='gmap_canvas'>
+                                    <div className='gmap_canvas position-relative' onClick={() => setMapOpen(true)}>
+                                        <Badge pill bg="info" text="dark" className="position-absolute" style={{top: '8px', right: '8px'}} onClick={() => setMapOpen(true)}>
+                                            Maximize <FiMaximize />
+                                        </Badge>
                                         <iframe width='100px' height='100px' id='gmap_canvas' src='https://maps.google.com/maps?q=rasika%20ranjani%20sabha&t=&z=13&ie=UTF8&iwloc=&output=embed' frameBorder='0' scrolling='no' marginHeight='0' marginWidth='0'></iframe>
                                     </div>
                                 </div>
@@ -330,6 +359,22 @@ function RSVP({ dbRef }) {
                     </Card>
                 </Col>
             </Row>
+            <Modal show={mapOpen} onHide={() => setMapOpen(false)} size="lg">
+                <Modal.Header closeButton>
+                <Modal.Title>Rasika Ranjani Sabbha Location Map</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                <div className='gmap_canvas_modal'>
+                    <iframe
+                    src='https://maps.google.com/maps?q=rasika%20ranjani%20sabha&t=&z=13&ie=UTF8&iwloc=&output=embed'
+                    className='gmap_iframe'
+                    frameBorder='0' 
+                    scrolling='no' 
+                    ></iframe>
+                </div>
+                </Modal.Body>
+            </Modal>
+
         </Container>
     </>
   );
