@@ -55,7 +55,6 @@ function RSVP_Modal({dbRef, attendeeInfo, setAttendeeInfo, setSubmit, ...props})
                 }
                 else if(response == 409) {
                     toggleConflictToast();
-
                 }
                 else if(response == 400) {
                     console.error("Error adding attendee");
@@ -106,6 +105,7 @@ function RSVP_Modal({dbRef, attendeeInfo, setAttendeeInfo, setSubmit, ...props})
           <RSVP_Form info={attendeeInfo} updateInfo={setAttendeeInfo}/>
         </Modal.Body>
         <Modal.Footer>
+            
             <Button variant="outline-success" onClick={submit}>{showConflictToast ? "Update Info" : "Submit"}</Button>
             <Button variant="outline-danger" onClick={props.onHide}>Close</Button>
         </Modal.Footer>
