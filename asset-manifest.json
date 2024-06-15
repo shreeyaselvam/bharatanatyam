@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/bharatanatyam/static/css/main.edce6e6d.css",
-    "main.js": "/bharatanatyam/static/js/main.589b9d2d.js",
+    "main.js": "/bharatanatyam/static/js/main.c614d0a5.js",
     "static/js/453.587d093e.chunk.js": "/bharatanatyam/static/js/453.587d093e.chunk.js",
     "static/media/Arangetram_Invite_RSVP.png": "/bharatanatyam/static/media/Arangetram_Invite_RSVP.98c1694be3e54af1c4ef.png",
     "static/media/logofile.png": "/bharatanatyam/static/media/logofile.7f2c9a3f025a32c88009.png",
@@ -12,11 +12,11 @@
     "static/media/StageImage.jpg": "/bharatanatyam/static/media/StageImage.5bb2b53040009fbca2e1.jpg",
     "index.html": "/bharatanatyam/index.html",
     "main.edce6e6d.css.map": "/bharatanatyam/static/css/main.edce6e6d.css.map",
-    "main.589b9d2d.js.map": "/bharatanatyam/static/js/main.589b9d2d.js.map",
+    "main.c614d0a5.js.map": "/bharatanatyam/static/js/main.c614d0a5.js.map",
     "453.587d093e.chunk.js.map": "/bharatanatyam/static/js/453.587d093e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.edce6e6d.css",
-    "static/js/main.589b9d2d.js"
+    "static/js/main.c614d0a5.js"
   ]
 }
