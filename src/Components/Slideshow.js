@@ -13,7 +13,7 @@ function Slideshow() {
         <Image src={pic1} fluid />;
         <Carousel.Caption className='card-name'>
           <h3>Shreeya's Bharatanatyam</h3>
-          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+          <p>ஸ்ரேயாவின் பரதநாட்டிய காட்சி</p>
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
@@ -28,7 +28,7 @@ function Slideshow() {
         <Carousel.Caption className='card-name'>
           <h3>Shreeya's Bharatanatyam</h3>
           <p>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur.
+          ஸ்ரேயாவின் பரதநாட்டிய காட்சி
           </p>
         </Carousel.Caption>
       </Carousel.Item>
