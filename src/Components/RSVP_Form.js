@@ -12,7 +12,7 @@ function RSVP_Form({ info, updateInfo }) {
             <Row className="mb-2">
                 <Form.Group as={Col} controlId="formGridEmail">
                     <Form.Label><b>Name</b></Form.Label>
-                    <Form.Control required type="name" placeholder="e.g. Bilbo Bagins" value={info.name || ''} onChange={e => 
+                    <Form.Control required type="name" placeholder="e.g. Bilbo Baggins" value={info.name || ''} onChange={e => 
                         updateInfo({...info, name: e.target.value})} />
                 </Form.Group>
                 
