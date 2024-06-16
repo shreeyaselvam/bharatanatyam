@@ -46,13 +46,13 @@ function RSVP_Modal({dbRef, attendeeInfo, setAttendeeInfo, setSubmit, ...props})
                 if(response == 200){
                     console.log("Attendee added successfully");
                     setSubmit(true);
-                    if(attendeeInfo.remember){
-                        Cookies.set('name', attendeeInfo.name, { expires: 7, path: '', secure: true });
-                        Cookies.set('mobile', attendeeInfo.mobile, { expires: 7, path: '', secure: true });
-                    } else {
-                        Cookies.remove('name', { path: '', secure: true });
-                        Cookies.remove('mobile', { path: '', secure: true });
-                    }
+                    //if(attendeeInfo.remember){
+                    Cookies.set('name', attendeeInfo.name, { expires: 7, path: '', secure: true });
+                    Cookies.set('mobile', attendeeInfo.mobile, { expires: 7, path: '', secure: true });
+                    // } else {
+                    //     Cookies.remove('name', { path: '', secure: true });
+                    //     Cookies.remove('mobile', { path: '', secure: true });
+                    // }
                     props.onHide();
                 }
                 else if(response == 409) {
@@ -73,13 +73,13 @@ function RSVP_Modal({dbRef, attendeeInfo, setAttendeeInfo, setSubmit, ...props})
                 console.log("Attendee updated successfully");
                 toggleConflictToast();
                 setSubmit(true);
-                if(attendeeInfo.remember){
-                    Cookies.set('name', attendeeInfo.name, { expires: 7, path: '', secure: true });
-                    Cookies.set('mobile', attendeeInfo.mobile, { expires: 7, path: '', secure: true });
-                } else {
-                    Cookies.remove('name', { path: '', secure: true });
-                    Cookies.remove('mobile', { path: '', secure: true });
-                }
+                //if(attendeeInfo.remember){
+                Cookies.set('name', attendeeInfo.name, { expires: 7, path: '', secure: true });
+                Cookies.set('mobile', attendeeInfo.mobile, { expires: 7, path: '', secure: true });
+                // } else {
+                //     Cookies.remove('name', { path: '', secure: true });
+                //     Cookies.remove('mobile', { path: '', secure: true });
+                // }
                 props.onHide();
             }
             else if(response == 409) {
@@ -326,11 +326,13 @@ function RSVP({ dbRef }) {
                                             <div class="event-description">
                                                 <Card.Text className='event-card'>
                                                     <h5>Rasika Ranjani Sabha</h5>
-                                                    <h7>3838 Mumford Rd, Halifax, NS B3L 4N9</h7>
-                                                    <br></br>
+                                                    <p>30/1, Sundareswarar St, near Lady Sivaswamy School, Girija Garden, Mylapore, Chennai</p>
                                                     {/* <Badge pill bg="light" text="dark">
                                                     SUNDAY, July 21
                                                     </Badge> &nbsp; */}
+                                                    <Badge pill bg="light" text="dark">
+                                                    Tea and Snack @ 4:45 PM
+                                                    </Badge> &nbsp;
                                                     <Badge pill bg="light" text="dark">
                                                     Seating @ 5:30 PM
                                                     </Badge> &nbsp;
@@ -343,7 +345,7 @@ function RSVP({ dbRef }) {
                                         </div>
                                     </div>
                                     <Alert variant="warning" style={{marginLeft: '51px', marginRight: '51px'}}>
-                                        Tea and snacks will be served at 4:45 PM. <b>Doors will close sharply at 6:00 PM.</b>
+                                        <b>Doors will close sharply at 6:00 PM.</b>
                                     </Alert>
                                 </>
                                 <div className='mapouter d-flex justify-content-center'>
@@ -359,7 +361,7 @@ function RSVP({ dbRef }) {
                     </Card>
                 </Col>
             </Row>
-            <Modal show={mapOpen} onHide={() => setMapOpen(false)} size="lg">
+            <Modal show={mapOpen} onHide={() => setMapOpen(false)} size="lg" style={{width:'100vw'}}>
                 <Modal.Header closeButton>
                 <Modal.Title>Rasika Ranjani Sabbha Location Map</Modal.Title>
                 </Modal.Header>
