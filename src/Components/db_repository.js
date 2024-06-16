@@ -18,11 +18,23 @@ export const getAttendeesByNameAndMobile = async (name, mobile) => {
     const q = query(dbRef, where("name", "==", name), where("mobile", "==", parseInt(mobile)));
     console.log(q);
 
-    return await getDocs(q).then((obj) => {
-        const data = obj.docs.map(elem => ({ ...elem.data() }))
-        console.log("Query Snapshot: ", data[0]);
-        return {...data[0]};
-    })
+    // return await getDocs(q).then((obj) => {
+    //     const data = obj.docs.map(elem => ({ ...elem.data() }))
+    //     console.log("Query Snapshot: ", data[0]);
+    //     if (data[0] === undefined) {
+    //         console.log("Data is undefined: ", data[0]);
+    //         return undefined;
+    //     }
+    //     return {...data[0]};
+    // });
+    const obj = await getDocs(q);
+    const data = obj.docs.map(elem => ({ ...elem.data() }));
+    console.log("Query Snapshot: ", data[0]);
+    if (data[0] === undefined) {
+        console.log("Data is undefined: ", data[0]);
+        return undefined;
+    }
+    return {...data[0]};
 }
 
 export const getAttendeesByNameAndMobileReturnID = async (name, mobile) => {
@@ -73,6 +85,7 @@ export const postAttendee = async (data) => {
         //                 console.error("Error fetching attendees before submitting new attending: ", error);
         //             });
         const record = await getAttendeesByNameAndMobile(data.name, data.mobile);
+        console.log("snapshot received: ", record);
         if (record !== undefined) {
             console.log("Record already exists: ", record);
             console.log("Response to be sent: ", RESPONSE_CODES.CONFLICT);

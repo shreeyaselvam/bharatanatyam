@@ -97,8 +97,7 @@ function RSVP_Modal({dbRef, attendeeInfo, setAttendeeInfo, setSubmit, ...props})
         {...props}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
-        centered
-        className="rsvp_modal"
+        className="rsvp_modal" style={{width: '100vw'}}
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
@@ -315,7 +314,8 @@ function RSVP({ dbRef }) {
                                         <div class="event">
                                             <div class="event-left">
                                                 <div class="event-date">
-                                                    <div class="date">21</div>
+                                                    <div class="month">Sunday</div> &nbsp;
+                                                    <div class="date">21</div> &nbsp;
                                                     <div class="month">July</div>
                                                 </div>
                                             </div>
@@ -328,9 +328,9 @@ function RSVP({ dbRef }) {
                                                     <h5>Rasika Ranjani Sabha</h5>
                                                     <h7>3838 Mumford Rd, Halifax, NS B3L 4N9</h7>
                                                     <br></br>
-                                                    <Badge pill bg="light" text="dark">
+                                                    {/* <Badge pill bg="light" text="dark">
                                                     SUNDAY, July 21
-                                                    </Badge> &nbsp;
+                                                    </Badge> &nbsp; */}
                                                     <Badge pill bg="light" text="dark">
                                                     Seating @ 5:30 PM
                                                     </Badge> &nbsp;
