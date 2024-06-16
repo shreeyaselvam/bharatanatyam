@@ -12,13 +12,13 @@ function RSVP_Form({ info, updateInfo }) {
             <Row className="mb-2">
                 <Form.Group as={Col} controlId="formGridEmail">
                     <Form.Label><b>Name</b></Form.Label>
-                    <Form.Control required type="name" placeholder="e.g. Kanchana Vaithyanathan" value={info.name || ''} onChange={e => 
+                    <Form.Control required type="name" placeholder="e.g. Bilbo Bagins" value={info.name || ''} onChange={e => 
                         updateInfo({...info, name: e.target.value})} />
                 </Form.Group>
                 
                 <Form.Group as={Col} controlId="formGridAddress1">
                     <Form.Label><b>Cell Number</b></Form.Label>
-                    <Form.Control required placeholder="e.g. 9190346789" value={info.mobile || ''} onChange={e => 
+                    <Form.Control required placeholder="e.g. 911234567821" value={info.mobile || ''} onChange={e => 
                         updateInfo({...info, mobile: parseInt(e.target.value)})}/>
                 </Form.Group>
             </Row>
@@ -26,7 +26,7 @@ function RSVP_Form({ info, updateInfo }) {
             <Row className="mb-2">
                 <Form.Group as={Col} controlId="formGridPassword">
                     <Form.Label><b>Email</b></Form.Label>
-                    <Form.Control type="email" placeholder="e.g. absent-minded-shreeya@gmail.com" value={info.email || ''} onChange={e => 
+                    <Form.Control type="email" placeholder="e.g. dobby@hogwarts.com" value={info.email || ''} onChange={e => 
                         updateInfo({...info, email: e.target.value})} />
                 </Form.Group>
                 <Form.Group as={Col} controlId="formGridPassword"></Form.Group>
