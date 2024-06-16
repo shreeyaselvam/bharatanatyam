@@ -233,8 +233,8 @@ function RSVP({ dbRef }) {
                     </Card>
                 </Col>
                 <Col sm={12} md={5}>
-                    <Card className='custom-card'>
-                    <Card.Body>
+                    <Card className='custom-card' style={{backgroundColor: '#AA8F67', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'}}>
+                        <Card.Body>
                             {!submitted ? (
                                 <>
                                     <Card.Title>You Are Invited! 🎉</Card.Title>
@@ -330,8 +330,9 @@ function RSVP({ dbRef }) {
                                                     {/* <Badge pill bg="light" text="dark">
                                                     SUNDAY, July 21
                                                     </Badge> &nbsp; */}
+                                                    <b>Event will start sharply at 6:00 PM.</b><br></br>
                                                     <Badge pill bg="light" text="dark">
-                                                    Tea and Snack @ 4:45 PM
+                                                    Tea and Snack @ 4:30 PM
                                                     </Badge> &nbsp;
                                                     <Badge pill bg="light" text="dark">
                                                     Seating @ 5:30 PM
@@ -344,9 +345,9 @@ function RSVP({ dbRef }) {
                                             </div>
                                         </div>
                                     </div>
-                                    <Alert variant="warning" style={{marginLeft: '51px', marginRight: '51px'}}>
+                                    {/* <Alert variant="warning" style={{marginLeft: '45px', marginRight: '45px'}}>
                                         <b>Doors will close sharply at 6:00 PM.</b>
-                                    </Alert>
+                                    </Alert> */}
                                 </>
                                 <div className='mapouter d-flex justify-content-center'>
                                     <div className='gmap_canvas position-relative' onClick={() => setMapOpen(true)}>

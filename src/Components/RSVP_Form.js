@@ -2,7 +2,7 @@ import '../App.css';
 import Carousel from 'react-bootstrap/Carousel';
 import rsvpPic from '../assets/Arangetram_Invite_RSVP.png';
 import Image from 'react-bootstrap/Image';
-import { Card, Button, Stack, Container, Col, Row, Form } from 'react-bootstrap';
+import { Card, Button, Stack, Container, Col, Row, Form, Badge } from 'react-bootstrap';
 import { useState } from 'react';
 import Collapse from 'react-bootstrap/Collapse';
 
@@ -11,7 +11,9 @@ function RSVP_Form({ info, updateInfo }) {
         <Form>
             <Row className="mb-2">
                 <Form.Group as={Col} controlId="formGridEmail">
-                    <Form.Label><b>Name</b></Form.Label>
+                    <Form.Label><b>Name </b>&nbsp;<Badge pill bg="danger">
+                        Required
+                    </Badge></Form.Label>
                     <Form.Control required type="name" placeholder="e.g. Bilbo Baggins" value={info.name || ''} onChange={e => 
                         updateInfo({...info, name: e.target.value})} />
                 </Form.Group>
@@ -43,10 +45,13 @@ function RSVP_Form({ info, updateInfo }) {
                     </Form.Select>
                 </Form.Group> */}
             </Row>
+            <br></br>
             {info.attending == 1 ? (<><Row className="mb-3">
                 <Form.Label><b>Who's Attending?</b></Form.Label>
                 <Form.Group as={Col} controlId="formGridCity">
-                    <Form.Label>Number of Adults</Form.Label>
+                    <Form.Label>Number of Adults &nbsp;<Badge pill bg="danger">
+                        Required
+                    </Badge></Form.Label>
                     <Form.Control type="number" placeholder="e.g. 1" value={info.adults || ''} onChange={e => 
                     updateInfo({...info, adults: parseInt(e.target.value)})}/>
                 </Form.Group>
@@ -57,8 +62,7 @@ function RSVP_Form({ info, updateInfo }) {
                     updateInfo({...info, kids: parseInt(e.target.value)})}/>
                 </Form.Group>
             </Row><br></br></>) : <></>}
-            <br></br>
-            <Form.Label><b>Any Comments?</b> </Form.Label>
+            <Form.Label><b>Comments</b> </Form.Label>
             <Form.Control as="textarea" rows={3} value={info.comments || ''} onChange={e => 
                     updateInfo({...info, comments: e.target.value})}/>
             <br></br>
