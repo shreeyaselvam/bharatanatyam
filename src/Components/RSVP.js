@@ -12,7 +12,7 @@ import { CookiesProvider, useCookies } from 'react-cookie';
 import { FcEditImage, FcRemoveImage, FcCamcorderPro, FcCheckmark, FcMinus } from "react-icons/fc";
 import Cookies from 'js-cookie';
 import {getAttendeesByNameAndMobile, postAttendee, setAttendee, db } from './db_repository';
-import { FiMaximize2, FiMaximize } from "react-icons/fi";
+import { FiMaximize2, FiMaximize, FiMapPin } from "react-icons/fi";
 
 const ATTENDANCE_OPTIONS = [
     "Not Attending",
@@ -37,7 +37,7 @@ function RSVP_Modal({dbRef, attendeeInfo, setAttendeeInfo, setSubmit, ...props})
 
     const submit = async () => {
         try {
-            if(attendeeInfo.name === null || attendeeInfo.mobile === null){
+            if(attendeeInfo.name === null){
                 alert("Please fill in all the required fields!");
                 return;
             }
@@ -239,7 +239,7 @@ function RSVP({ dbRef }) {
                                 <>
                                     <Card.Title>You Are Invited! 🎉</Card.Title>
                                     <Card.Text>
-                                        Would you like to attend Shreeya's Bharatanatyam Arangetram?
+                                        Will you be attending Shreeya's Bharatanatyam Arangetram?
                                     </Card.Text>
                                     <Stack direction="horizontal" gap={3} className="justify-content-center">
                                         <Button variant="success" onClick={() => {setAttending(1); setOpen(true);}}>Yes &nbsp; 
@@ -306,11 +306,11 @@ function RSVP({ dbRef }) {
                             <br></br>
                         </Card.Body>
                         <hr></hr>
-                        <Card.Body className='position-relative'>
+                        <Card.Body>
                             <Stack gap={3}>
                                 <>
                                     <Card.Title>Event Details</Card.Title>
-                                    <div class="event-container">
+                                    <div class="event-container position-relative">
                                         <div class="event">
                                             <div class="event-left">
                                                 <div class="event-date">
@@ -320,7 +320,10 @@ function RSVP({ dbRef }) {
                                                 </div>
                                             </div>
 
-                                            <div class="event-right">
+                                            <div className="event-right position-relative">
+                                            <Badge pill bg="success" className='position-absolute' style={{top: '6px', right:'6px'}} onClick={() => setMapOpen(true)}>
+                                                <FiMapPin />
+                                            </Badge>
                                             <h3 class="event-title">Shreeya's Arangetram</h3>
 
                                             <div class="event-description">
