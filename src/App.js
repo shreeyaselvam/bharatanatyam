@@ -45,7 +45,7 @@ function AppBody({ pageRoute }) {
             >
               <Offcanvas.Header closeButton>
                 <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${'sm'}`}>
-                  Offcanvas Navigation
+                  <Image src={logo} width="70vw" height="70vh" className="d-inline-block align-top" alt="Brand logo" />
                 </Offcanvas.Title>
               </Offcanvas.Header>
               <Offcanvas.Body>
