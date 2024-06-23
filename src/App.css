@@ -42,16 +42,3 @@ html, body {
     transform: rotate(360deg);
   }
 }
-.carousel,
-.carousel-item,
-.carousel-item img {
-  height: 100vh;
-}
-
-.carousel-item img {
-  object-fit: cover;
-  width: 100%;
-}
-.navbar {
-  display: flex;
-}
