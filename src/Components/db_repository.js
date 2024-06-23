@@ -15,18 +15,8 @@ export const RESPONSE_CODES = {
 }
 
 export const getAttendeesByNameAndMobile = async (name, mobile) => {
-    const q = query(dbRef, where("name", "==", name), where("mobile", "==", parseInt(mobile)));
+    const q = query(dbRef, where("name", "==", name));
     console.log(q);
-
-    // return await getDocs(q).then((obj) => {
-    //     const data = obj.docs.map(elem => ({ ...elem.data() }))
-    //     console.log("Query Snapshot: ", data[0]);
-    //     if (data[0] === undefined) {
-    //         console.log("Data is undefined: ", data[0]);
-    //         return undefined;
-    //     }
-    //     return {...data[0]};
-    // });
     const obj = await getDocs(q);
     const data = obj.docs.map(elem => ({ ...elem.data() }));
     console.log("Query Snapshot: ", data[0]);
@@ -38,7 +28,7 @@ export const getAttendeesByNameAndMobile = async (name, mobile) => {
 }
 
 export const getAttendeesByNameAndMobileReturnID = async (name, mobile) => {
-    const q = query(dbRef, where("name", "==", name), where("mobile", "==", mobile));
+    const q = query(dbRef, where("name", "==", name));
 
     return await getDocs(q).then((obj) => {
         const data = obj.docs.map(elem => ({ id: elem.id, ...elem.data() }))
@@ -49,64 +39,33 @@ export const getAttendeesByNameAndMobileReturnID = async (name, mobile) => {
 
 export const setAttendee = async (data) => {
     try {
-        // getAttendeesByNameAndMobileReturnID(data.name, data.mobile)
-        //             .then(async (id) => {
-        //                 await setDoc(doc(db, "attendees", id), data);
-        //                 return RESPONSE_CODES.SUCCESS;
-        //             })
-        //             .catch(error => {
-        //                 console.error("Error fetching attendees before updating attendee: ", error);
-        //             });
         const attendeeId = await getAttendeesByNameAndMobileReturnID(data.name, data.mobile);
         await setDoc(doc(db, "attendees", attendeeId), data);
-        return RESPONSE_CODES.SUCCESS;
+        return {'code': RESPONSE_CODES.SUCCESS};
     } catch (e) {
         console.error("Error updating attendee: ", e);
-        return RESPONSE_CODES.FAILURE;
+        return {'code': RESPONSE_CODES.FAILURE};
     }
 }
 
 export const postAttendee = async (data) => {
     console.log("Data: ", data);
     try {
-        // await getAttendeesByNameAndMobile(data.name, data.mobile)
-        //             .then(record => {
-        //                 console.log("snapshot: ", record);
-        //                 if (record !== undefined) {
-        //                     console.log("Record already exists: ", record);
-        //                     console.log("Response to be sent: ", RESPONSE_CODES.CONFLICT);
-        //                     return RESPONSE_CODES.CONFLICT;
-        //                 }
-        //                 else {
-        //                     console.log("Record does not exist: ", record);
-        //                 }
-        //             })
-        //             .catch(error => {
-        //                 console.error("Error fetching attendees before submitting new attending: ", error);
-        //             });
         const record = await getAttendeesByNameAndMobile(data.name, data.mobile);
         console.log("snapshot received: ", record);
         if (record !== undefined) {
             console.log("Record already exists: ", record);
             console.log("Response to be sent: ", RESPONSE_CODES.CONFLICT);
-            return RESPONSE_CODES.CONFLICT;
+            return {'code': RESPONSE_CODES.CONFLICT, 'name': record.name, 'mobile': record.mobile};
         }
         console.log("Proceeding with attendee: ", data);
-        // await addDoc(dbRef, data)
-        //     .then((docRef) => {
-        //         console.log("Document written with ID: ", docRef.id);
-        //         return RESPONSE_CODES.SUCCESS;
-        //     })
-        //     .catch((error) => {
-        //         console.error("Error adding document: ", error);
-        //     });
         const docRef = await addDoc(dbRef, data);
         if (docRef !== undefined) {
             console.log("Document written with ID: ", docRef.id);
-            return RESPONSE_CODES.SUCCESS;
+            return {'code': RESPONSE_CODES.SUCCESS};
         }
     } catch (e) {
         console.error("Error adding attendee: ", e);
-        return RESPONSE_CODES.FAILURE;
+        return {'code': RESPONSE_CODES.FAILURE};
     }
 }

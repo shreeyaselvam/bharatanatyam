@@ -9,7 +9,7 @@ import RSVP_Form from './RSVP_Form';
 import firebase_auth from '../assets/firebase-auth';
 import { collection, addDoc, getDocs  } from "firebase/firestore";
 import { CookiesProvider, useCookies } from 'react-cookie';
-import { FcEditImage, FcRemoveImage, FcCamcorderPro, FcCheckmark, FcMinus } from "react-icons/fc";
+import { FcEditImage, FcRemoveImage, FcCamcorderPro, FcCheckmark, FcMinus, FcApprove, FcInspection, FcGoogle } from "react-icons/fc";
 import Cookies from 'js-cookie';
 import {getAttendeesByNameAndMobile, postAttendee, setAttendee, db } from './db_repository';
 import { FiMaximize2, FiMaximize, FiMapPin } from "react-icons/fi";
@@ -43,23 +43,18 @@ function RSVP_Modal({dbRef, attendeeInfo, setAttendeeInfo, setSubmit, ...props})
             }
             postAttendee(attendeeInfo).then(response => {
                 console.log("Recieved:", response);
-                if(response == 200){
+                if(response.code == 200){
                     console.log("Attendee added successfully");
                     setSubmit(true);
-                    //if(attendeeInfo.remember){
                     Cookies.set('name', attendeeInfo.name, { expires: 7, path: '', secure: true });
                     Cookies.set('mobile', attendeeInfo.mobile, { expires: 7, path: '', secure: true });
-                    // } else {
-                    //     Cookies.remove('name', { path: '', secure: true });
-                    //     Cookies.remove('mobile', { path: '', secure: true });
-                    // }
                     props.onHide();
                 }
-                else if(response == 409) {
+                else if(response.code == 409) {
                     setConflictToast(true);
                     console.log("Conflict adding attendee");
                 }
-                else if(response == 400) {
+                else if(response.code == 400) {
                     console.error("Error adding attendee");
                 }
             });
@@ -69,24 +64,19 @@ function RSVP_Modal({dbRef, attendeeInfo, setAttendeeInfo, setSubmit, ...props})
     }
     const updateUserInfo = () => {
         setAttendee(attendeeInfo).then(response => {
-            if(response == 200){
+            if(response.code == 200){
                 console.log("Attendee updated successfully");
                 toggleConflictToast();
                 setSubmit(true);
-                //if(attendeeInfo.remember){
                 Cookies.set('name', attendeeInfo.name, { expires: 7, path: '', secure: true });
                 Cookies.set('mobile', attendeeInfo.mobile, { expires: 7, path: '', secure: true });
-                // } else {
-                //     Cookies.remove('name', { path: '', secure: true });
-                //     Cookies.remove('mobile', { path: '', secure: true });
-                // }
                 props.onHide();
             }
-            else if(response == 409) {
+            else if(response.code == 409) {
                 console.error("Conflict updating attendee");
                 setConflictToast(true);
             }
-            else if(response == 400) {
+            else if(response.code == 400) {
                 console.error("Error updating attendee");
             }
         });
@@ -112,6 +102,7 @@ function RSVP_Modal({dbRef, attendeeInfo, setAttendeeInfo, setSubmit, ...props})
                 Looks like you are already registered with us, we see the following fields are different: 
                 Would you like to update your information? &nbsp; <Button variant="outline-primary" onClick={updateUserInfo}>Yes</Button> &nbsp; <Button variant="outline-danger" onClick={toggleConflictToast}>No</Button>
             </Alert> : <></>}
+            <Button variant="outline-primary" onClick={submit}>Sign in with Google <FcGoogle /></Button>
             <Button variant="outline-success" onClick={submit}>{"Submit"}</Button>
             <Button variant="outline-danger" onClick={props.onHide}>Close</Button>
         </Modal.Footer>
@@ -151,66 +142,16 @@ function RSVP({ dbRef }) {
             firstRender.current = false;
             return;
         }
-        // getAttendeesByNameAndMobile("Shreeya Selvam", 8043031984)
-        //             .then(snapshot => {
-        //                 console.log("snapshot: ", snapshot);
-        //                 const mergedAttendee = { ...ATTENDEE_TEMPLATE, ...snapshot };
-        //                 console.log("Merged Attendee: ", mergedAttendee);
-        //                 setAttendeeInfo(mergedAttendee);
-        //                 console.log("Attendee Info: ", attendeeInfo);
-        //             })
-        //             .catch(error => {
-        //                 console.error("Error fetching attendees: ", error);
-        //             });
     });
 
-    //const [cookies, setCookie, removeCookie] = useCookies(['name', 'email', 'attending', 'mobile', 'adults', 'kids', 'comments', 'remember'])
-    // useEffect(() => {
-    //     if(cookies){
-    //         attendeeTempl.name = cookies.name;
-    //         attendeeTempl.email = cookies.email;
-    //         attendeeTempl.attending = cookies.attending;
-    //         attendeeTempl.mobile = cookies.mobile;
-    //         attendeeTempl.adults = cookies.adults;
-    //         attendeeTempl.kids = cookies.kids;
-    //         attendeeTempl.comments = cookies.comments;
-    //         attendeeTempl.remember = cookies.remember;
-    //         setSubmit(true);
-    //     }
-    // }, [cookies]);
     console.log("attendeeInfo: ", attendeeInfo);
     useEffect(() => {
         setAttendeeInfo((prev) => ({
           ...prev,
           attending: attending,
         }));
-        // ATTENDEE_TEMPLATE.attending = attending;
     }, [attending]);
-
-    // const setCookieFields = (name, email, attending, mobile, adults, kids, comments, remember) => {
-    //     setCookie('name', name, { path: '/' });
-    //     setCookie('email', email, { path: '/' });
-    //     setCookie('attending', attending, { path: '/' });
-    //     setCookie('mobile', mobile, { path: '/' });
-    //     setCookie('adults', adults, { path: '/' });
-    //     setCookie('kids', kids, { path: '/' });
-    //     setCookie('comments', comments, { path: '/' });
-    //     setCookie('remember', remember, { path: '/' });
-    // }
-    // const deleteCookie = (name, email, attending, mobile, adults, kids, comments, remember) => {
-    //     removeCookie(name, '', { path: '/' });
-    //     removeCookie(email, '', { path: '/' });
-    //     removeCookie(attending, '', { path: '/' });
-    //     removeCookie(mobile, '', { path: '/' });
-    //     removeCookie(adults, '', { path: '/' });
-    //     removeCookie(kids, '', { path: '/' });
-    //     removeCookie(comments, '', { path: '/' });
-    //     removeCookie(remember, '', { path: '/' });
-    // }
     const reset = () => {
-        //deleteCookie(attendeeInfo.name, attendeeInfo.email, attendeeInfo.attending, attendeeInfo.mobile, attendeeInfo.adults, attendeeInfo.kids, attendeeInfo.comments, attendeeInfo.remember);
-        // ATTENDEE_TEMPLATE.name = ATTENDEE_TEMPLATE.email = ATTENDEE_TEMPLATE.mobile = ATTENDEE_TEMPLATE.adults = ATTENDEE_TEMPLATE.kids = ATTENDEE_TEMPLATE.comments = null;
-        // ATTENDEE_TEMPLATE.remember = false;
         setAttendeeInfo(ATTENDEE_TEMPLATE);
         setSubmit(false);
     }
@@ -252,16 +193,16 @@ function RSVP({ dbRef }) {
                                                     <FcMinus />
                                             </Badge>
                                         </Button>{' '}
-                                        {/* <Button variant="primary" onClick={() => {setAttending(2); setOpen(true);}}>Livestream &nbsp;
+                                        <Button variant="primary" onClick={() => {setAttending(0); setOpen(true);}}>Aleady Signed Up? &nbsp;
                                             <Badge pill bg="light" text="dark">
-                                                    <FcCamcorderPro />
+                                                <FcInspection />
                                             </Badge>
-                                        </Button>{' '} */}
+                                        </Button>{' '}
                                     </Stack>
                                 </>) : <></>}
                             {submitted ? <Fade in={submitted}>
                                 <div id="example-fade-text" className="justify-content-center">
-                                    <h4>Thank you for your response! We look forward to seeing you at the event.</h4>
+                                    <h4>Thank you for your response! {attending==1 ? 'We look forward to seeing you at the event!' : "Don't worry, we got you covered with a livestream link."}</h4>
                                     <br></br>
                                     <h6>Registration Info:</h6>
                                     <Table striped bordered hover>
@@ -271,7 +212,6 @@ function RSVP({ dbRef }) {
                                                 <th>Cell Number</th>
                                                 <th>Adults</th>
                                                 <th>Kids</th>
-                                                {/* <th>Attendance</th> */}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -280,27 +220,11 @@ function RSVP({ dbRef }) {
                                                 <td>{attendeeInfo.mobile}</td>
                                                 <td>{attendeeInfo.adults}</td>
                                                 <td>{attendeeInfo.kids}</td>
-                                                {/* <td>{ATTENDANCE_OPTIONS[attendeeInfo.attending]}</td> */}
                                             </tr>
                                         </tbody>
                                     </Table>
                                     <Button type="submit" onClick={() => setOpen(true)}>Edit <FcEditImage /></Button> &nbsp;
                                     <Button variant="warning" type="submit" onClick={reset}>Not You? <FcRemoveImage /></Button>
-                                    {/* <Container>
-                                        <Row>
-                                            <Col><b>Name: </b>{attendeeInfo.name}</Col>
-                                            <Col><b>Cell Number: </b>{attendeeInfo.mobile}</Col>
-                                        </Row>
-                                        <Row>
-                                            <Col><b>Email: </b>{attendeeInfo.email}</Col>
-                                            {attendeeInfo.attending== 1 ? <><Col><b>Adults Attending: </b>{attendeeInfo.adults}</Col>
-                                            <Col><b>Kids Attending: </b>{attendeeInfo.kids}</Col></> : <></>}
-                                            {attendeeInfo.attending == 0 ? <Col><b>You cannot attend but we would still like to send you and update of the proceedings</b></Col> : <Col><b>How you are attending: </b>{attendanceOptions[attendeeInfo.attending]}</Col>}
-                                        </Row>
-                                        <Row>
-                                            <Col><b>Comments: </b>{attendeeInfo.comments}</Col>
-                                        </Row>
-                                    </Container> */}
                                 </div>
                             </Fade> : <></>}
                             <br></br>
@@ -330,9 +254,6 @@ function RSVP({ dbRef }) {
                                                 <Card.Text className='event-card'>
                                                     <h5>Rasika Ranjani Sabha</h5>
                                                     <p>30/1, Sundareswarar St, near Lady Sivaswamy School, Girija Garden, Mylapore, Chennai</p>
-                                                    {/* <Badge pill bg="light" text="dark">
-                                                    SUNDAY, July 21
-                                                    </Badge> &nbsp; */}
                                                     <b>Event will start sharply at 6:00 PM.</b><br></br>
                                                     <Badge pill bg="light" text="dark">
                                                     Tea and Snack @ 4:30 PM
@@ -348,9 +269,6 @@ function RSVP({ dbRef }) {
                                             </div>
                                         </div>
                                     </div>
-                                    {/* <Alert variant="warning" style={{marginLeft: '45px', marginRight: '45px'}}>
-                                        <b>Doors will close sharply at 6:00 PM.</b>
-                                    </Alert> */}
                                 </>
                                 <div className='mapouter d-flex justify-content-center'>
                                     <div className='gmap_canvas position-relative' onClick={() => setMapOpen(true)}>
