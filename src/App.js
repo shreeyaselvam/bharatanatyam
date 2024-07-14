@@ -4,7 +4,7 @@ import { BrowserRouter, useSearchParams } from 'react-router-dom';
 
 function LocationDisplay() {
     const [searchParams, setSearchParams] = useSearchParams();
-    window.location.replace(`https://9e2443e8.shreeya-bharatanatyam.pages.dev/?${searchParams.toString()}`);
+    window.location.replace(`https://67f4f4b7.shreeya-bharatanatyam.pages.dev/?${searchParams.toString()}`);
     return(
       <div></div>
     );
