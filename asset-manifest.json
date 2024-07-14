@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/bharatanatyam/static/css/main.891b926a.css",
-    "main.js": "/bharatanatyam/static/js/main.7b19af04.js",
+    "main.js": "/bharatanatyam/static/js/main.d5893597.js",
     "static/js/453.587d093e.chunk.js": "/bharatanatyam/static/js/453.587d093e.chunk.js",
     "index.html": "/bharatanatyam/index.html",
     "main.891b926a.css.map": "/bharatanatyam/static/css/main.891b926a.css.map",
-    "main.7b19af04.js.map": "/bharatanatyam/static/js/main.7b19af04.js.map",
+    "main.d5893597.js.map": "/bharatanatyam/static/js/main.d5893597.js.map",
     "453.587d093e.chunk.js.map": "/bharatanatyam/static/js/453.587d093e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.891b926a.css",
-    "static/js/main.7b19af04.js"
+    "static/js/main.d5893597.js"
   ]
 }
